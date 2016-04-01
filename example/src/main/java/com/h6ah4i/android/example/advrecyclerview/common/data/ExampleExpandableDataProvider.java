@@ -39,7 +39,7 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
 
     public ExampleExpandableDataProvider() {
         final String groupItems = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        final String childItems = "abc";
+        final String childItems = "abcggh";
 
         mData = new LinkedList<>();
 

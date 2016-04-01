@@ -24,6 +24,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -914,7 +915,14 @@ public class RecyclerViewExpandableItemManager implements ExpandableItemConstant
         int topRoom = groupItemTop;
         int bottomRoom = parentHeight - groupItemBottom;
 
-        if (topRoom <= topMargin) {
+        if (bottomMargin <= totalChildrenHeight) {
+            // scroll up
+            int scrollAmount = Math.max(0, totalChildrenHeight + bottomMargin - bottomRoom);
+            mRecyclerView.smoothScrollBy(0, scrollAmount);
+
+        } else if (bottomRoom >= (totalChildrenHeight + bottomMargin)) {
+            // no need to scroll
+        } else{
             // scroll down
             // WTF! smoothScrollBy() does not work properly!
             // smoothScrollToPosition() does not scroll smoothly BUT scrollToPosition(flatPosition) does!
@@ -924,13 +932,6 @@ public class RecyclerViewExpandableItemManager implements ExpandableItemConstant
             int offset = topMargin - parentTopPadding - itemTopMargin;
 
             ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(flatPosition, offset);
-        } else if (bottomRoom >= (totalChildrenHeight + bottomMargin)) {
-            // no need to scroll
-        } else {
-            // scroll up
-            int scrollAmount = Math.max(0, totalChildrenHeight + bottomMargin - bottomRoom);
-            scrollAmount = Math.min(topRoom - topMargin, scrollAmount);
-            mRecyclerView.smoothScrollBy(0, scrollAmount);
         }
     }
 
